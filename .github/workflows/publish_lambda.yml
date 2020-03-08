@@ -1,0 +1,32 @@
+name: "Publish Lambda"
+on:
+  push:
+    branches:
+      - master
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: "Install AWS CLI"
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip -qq awscliv2.zip
+          sudo ./aws/install
+          aws --version
+      - uses: actions/checkout@v2
+      - name: "Deploy Code"
+        run: |
+          cd $GITHUB_WORKSPACE
+          zip -X -r -qq index.zip *
+          aws lambda update-function-code --function-name $LAMBDA_NAME --zip-file fileb://index.zip
+          aws lambda update-function-configuration --function-name $LAMBDA_NAME --environment "Variables={"CASSIE_TUTORING_EMAIL"=$CASSIE_TUTORING_EMAIL,"MIDIOWAVENDING_EMAIL"=$MIDIOWAVENDING_EMAIL,"OTHER_EMAIL"=$OTHER_EMAIL,"SENDER_EMAIL"=$SENDER_EMAIL}"
+        env:
+          LAMBDA_NAME: email_function
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+          AWS_DEFAULT_OUTPUT: json
+          CASSIE_TUTORING_EMAIL: ${{ secrets.CASSIE_TUTORING_EMAIL }}
+          MIDIOWAVENDING_EMAIL: ${{ secrets.MIDIOWAVENDING_EMAIL }}
+          OTHER_EMAIL: ${{ secrets.OTHER_EMAIL }}
+          SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
