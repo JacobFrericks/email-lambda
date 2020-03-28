@@ -31,6 +31,8 @@ def lambda_handler(event, context):
 
     recipient = get_recipient(incoming_body["to"])
 
+    print("Sending email to: " + recipient)
+
     print("===SENDING EMAIL===")
     try:
         client = boto3.client('ses', region_name="us-east-1")

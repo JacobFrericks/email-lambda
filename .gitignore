@@ -1,3 +1,4 @@
 email-lambda.iml
 .idea/*
 venv/
+*/__pycache__/
