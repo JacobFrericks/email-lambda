@@ -9,3 +9,11 @@ def test_api_works():
     r = requests.post(url=url, data=json.dumps(body))
     assert r.status_code < 299
     print(r.status_code)
+
+
+def test_api_works_no_to():
+    url = os.getenv("EMAIL_LAMBDA_URL")
+    body = {"message": "This is the message", "email": "test@gmail.com", "name": "test test"}
+    r = requests.post(url=url, data=json.dumps(body))
+    assert r.status_code < 299
+    print(r.status_code)

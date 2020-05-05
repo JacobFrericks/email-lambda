@@ -26,10 +26,10 @@ def get_recipient(from_company):
 def lambda_handler(event, context):
     print("Incoming: " + json.dumps(event, indent=2))
     incoming_body = json.loads(event["body"])
-    message = f"{incoming_body['message']}\n\nFrom Email: {incoming_body['email']} \nName: {incoming_body['name']}"
+    message = f"{incoming_body.get('message', '')}\n\nFrom Email: {incoming_body.get('email', '')} \nName: {incoming_body.get('name', '')}"
     sender = SENDER_EMAIL
 
-    recipient = get_recipient(incoming_body["to"])
+    recipient = get_recipient(incoming_body.get("to", ''))
 
     print("Sending email to: " + recipient)
 
